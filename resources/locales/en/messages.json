@@ -1,0 +1,10 @@
+{
+    "login":"User Login Successfully!",
+    "Invalid":"Invalid credentials",
+    "emailSent":"Email Sent Successfully",
+    "accountNotFound":"No account found with this email",
+    "unauthorized":"Unauthorize access",
+    "passwordReset":"Password reset successfully",
+    "userExists":"User already exists",
+    "register":"Register successfully"
+}

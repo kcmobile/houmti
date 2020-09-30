@@ -1,0 +1,132 @@
+
+<!Doctype html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reset Password</title>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+<style></style>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<style type="text/css">
+        .parsley-errors-list{
+                color:red;
+                padding-left: 0;
+        }
+        .parsley-errors-list li{
+                list-style: none;
+        }
+</style>
+</head>
+<body>
+
+                <div class="container" style="margin-top: 100px;">
+                        <div class="row">
+                                <div class="col-sm-12" id="headText">
+                                        <h1 class="text-center">Reset Password</h1>
+                                </div>
+                                <div class="col-sm-offset-3 col-sm-6" id="success" style="display: none;">
+                                        <div class="alert alert-success text-center" role="alert">
+                                                <strong><h3>Great!</h3></strong><h3> Password Changed successfully...</h3>
+                                        </div>
+                                </div>
+                                <div class="col-sm-offset-3 col-sm-6" id="error" style="display: none;">
+                                        <div class="alert alert-danger text-center" role="alert">
+                                                <strong><h3>Oops!</h3></strong>
+                                                <h3> Something went wrong...</h3>
+                                                <strong><h3>Or!</h3></strong>
+                                                <h3> Unauthorize access...</h3>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="row" id="formRow">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                        <p class="text-center">Use the form below to change your password. Your password must be the same.</p>
+                                        <form method="post" id="passwordForm" data-parsley-validate="">
+                                                <div class="form-group">
+                                                        <input type="password"
+                                                class="input-lg form-control"
+                                                name="password1"
+                                                id="password1"
+                                                placeholder="New Password"
+                                                autocomplete="off"
+                                                data-parsley-required
+                                                data-parsley-minlength="6"
+
+                                                >
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                        <input type="password"
+                                                 class="input-lg form-control"
+                                                 name="password2"
+                                                 id="password2"
+                                                 placeholder="Repeat Password"
+                                                 autocomplete="off"
+                                                 data-parsley-required
+                                                 data-parsley-equalto="#password1"
+                                                 data-parsley-minlength="6"
+
+                                                 >
+                                                </div>
+
+                                                <input type="submit" id="submit" class="col-xs-12 btn btn-primary btn-load btn-lg" data-loading-text="Changing Password..." value="Change Password">
+                                        </form>
+                                </div><!--/col-sm-6-->
+                        </div><!--/row-->
+                </div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js">
+
+</script>
+<script type="text/javascript">
+        $('#passwordForm').on('submit', function(event){
+                console.log($(this).serialize());
+                var apiUrl = 'http://127.0.0.1:3333/api/mobile/resetPassword';
+                var url_string = window.location.href; //window.location.href
+            var url = new URL(url_string);
+            var token = url.searchParams.get("token");
+            var id=url.searchParams.get("id");
+
+                event.preventDefault();
+                if($('#passwordForm').parsley().isValid())
+                {
+                        $.ajax({
+                                url: apiUrl,
+                                method:"POST",
+                                dataType:"json",
+                                data:{ token:token,id:id,newPassword:$('#password2').val()},
+                                beforeSend:function()
+                                {
+                                        $('#submit').attr('disabled', 'disabled');
+                                        $('#submit').val('Submitting...');
+                                },
+                                success:function(data)
+                                {
+                                        console.log(data);
+                                        $('#passwordForm')[0].reset();
+                                        $('#passwordForm').parsley().reset();
+                                        // $('#submit').attr('disabled', false);
+                                        // $('#submit').val('Submit');
+                                        $('#formRow').remove();
+                                        $('#headText').remove();
+                                        $('#success').show();
+                                },
+                                error:function(error)
+                                {
+                                        $('#error').show();
+                                        $('#passwordForm')[0].reset();
+                                        $('#passwordForm').parsley().reset();
+                                        // $('#submit').attr('disabled', false);
+                                        // $('#submit').val('Submit');
+                                        $('#formRow').remove();
+                                        $('#headText').remove();
+                                }
+                        });
+                }
+        });
+</script>
+</body>
+</html>
+
